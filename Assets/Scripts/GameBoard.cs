@@ -75,7 +75,7 @@ public class GameBoard : MonoBehaviour
 	}
 
 	//Set tile[0] as destination for the moment
-	bool FindPaths()
+	public bool FindPaths()
 	{
 		//first step is to clear the path of all tiles, then make one tile the destination and add it to the frontier
 		foreach (GameTile tile in tiles)

@@ -49,6 +49,10 @@ public class Game : MonoBehaviour
     //Button selection
     ButtonPushType buttonTypeTile = ButtonPushType.Empty;
 
+    //Values for swapping allies on the grid
+    GameTile swapTile1 = null;
+    GameTile swapTile2 = null;
+
 
     //---------------------------------------------------------------
     //Functions
@@ -107,39 +111,39 @@ public class Game : MonoBehaviour
     void HandleTouch()
 	{
 		GameTile tile = board.GetTile(TouchRay);
-
-        //Wall
-        switch (buttonTypeTile)
+        
+        if(tile != null)
         {
-            case ButtonPushType.Wall:
-                Debug.Log("Hanle touch wall");
-                board.ToggleWall(tile);
-                break;
+            switch (buttonTypeTile)
+            {
+                case ButtonPushType.Wall:
+                    board.ToggleWall(tile);
+                    break;
 
-            case ButtonPushType.LaserTower:
-                Debug.Log("Hanle touch Laser Tower");
-                board.ToggleTower(tile, selectedTowerType);
-                break;
+                case ButtonPushType.LaserTower:
+                    board.ToggleTower(tile, selectedTowerType);
+                    break;
 
-            case ButtonPushType.MortarTower:
-                Debug.Log("Hanle touch Mortar Tower");
-                board.ToggleTower(tile, selectedTowerType);
-                break;
+                case ButtonPushType.MortarTower:
+                    board.ToggleTower(tile, selectedTowerType);
+                    break;
 
-            case ButtonPushType.Destination:
-                Debug.Log("Hanle touch Destination");
-                board.ToggleDestination(tile);
-                break;
+                case ButtonPushType.Destination:
+                    board.ToggleDestination(tile);
+                    break;
 
-            case ButtonPushType.SpawnPoint:
-                Debug.Log("Hanle touch Spawn Point");
-                board.ToggleSpawnPoint(tile);
-                break;
+                case ButtonPushType.SpawnPoint:
+                    board.ToggleSpawnPoint(tile);
+                    break;
 
-            case ButtonPushType.Sand:
-                Debug.Log("Hanle touch Sand");
-                board.ToggleSand(tile);
-                break;
+                case ButtonPushType.Sand:
+                    board.ToggleSand(tile);
+                    break;
+
+                case ButtonPushType.SwapAllies:
+                    SwapAllies(tile);
+                    break;
+            }
         }
 	}
 
@@ -192,36 +196,36 @@ public class Game : MonoBehaviour
     }
 
     //Button function
-    public void GetButtonPush(string newType) 
+    public void GetButtonPush(string buttonName) 
     {
         foreach(ButtonPushType buttonType in System.Enum.GetValues(typeof(ButtonPushType)))
         {
-            if(buttonType.ToString() == newType)
+            if(buttonType.ToString() == buttonName)
             {
                 switch (buttonType)
                 {
                     //Show info on grid
                     case ButtonPushType.ShowGrid:
                         board.ShowGrid = !board.ShowGrid;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
                     case ButtonPushType.ShowArrows:
                         board.ShowPaths = !board.ShowPaths;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
                     //Change the Turret type
                     case ButtonPushType.LaserTower:
                         selectedTowerType = TowerType.Laser;
                         buttonTypeTile = buttonType;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
                     case ButtonPushType.MortarTower:
                         selectedTowerType = TowerType.Mortar;
                         buttonTypeTile = buttonType;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
 
@@ -229,21 +233,69 @@ public class Game : MonoBehaviour
                     case ButtonPushType.Pause:
                         Time.timeScale =
                             Time.timeScale > pausedTimeScale ? pausedTimeScale : playSpeed;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
                     case ButtonPushType.Restart:
                         BeginNewGame();
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        ResetSwapAlies();
                         break;
 
-
-                    default:
+                    //Switch case
+                    case ButtonPushType.SwapAllies:
                         buttonTypeTile = buttonType;
-                        Debug.Log("GetButtonPush : " + buttonType.ToString());
+                        break;
+                                               
+                    default:
+                        ResetSwapAlies();
+                        buttonTypeTile = buttonType;
                         break;
                 }
             }
+        }
+    }
+
+    void ResetSwapAlies()
+    {
+        swapTile1 = null;
+        swapTile2 = null;
+    }
+
+    void SwapAllies(GameTile tile)
+    {
+        //The first tile must be a turret
+        if (swapTile1 == null)
+        {
+            if(tile.Content.Type == GameTileContentType.Tower)
+            {
+                swapTile1 = tile;
+                Debug.Log("Tower selected");
+                Debug.Log("Swap tile 1 content : " + swapTile1.Content);
+            }
+        }
+
+        //If we already have it, we check for the second tile, it must be empty
+        else if (swapTile2 == null)
+        {
+            if (tile.Content.Type == GameTileContentType.Empty)
+            {
+                GameTileContent swapTileHold = swapTile1.Content;
+                swapTile1.Content = swapTile2.Content;
+                swapTile2.Content = swapTileHold;
+                //Check if the new configuration will not block the ground
+                if (!board.FindPaths())
+                {
+                    swapTile2.Content = swapTile1.Content;
+                    swapTile1.Content = swapTileHold;
+                    board.FindPaths();
+                    Debug.Log("Failed to swap !");
+                }
+                else
+                {
+                    Debug.Log("Success to swap ! ");
+                }
+            }
+
         }
     }
 }
