@@ -32,6 +32,9 @@ public class GameTile : MonoBehaviour
 	//Direction for the orientation of the enemy
 	public Direction PathDirection { get; private set; }
 
+    //Boolean saying if tile is in a swap transition or not
+    public bool isSwapping = false;
+
 
 	//---------------------------------------------------------
 	//Functions
@@ -132,12 +135,13 @@ public class GameTile : MonoBehaviour
 		set
 		{
 			Debug.Assert(value != null, "Null assigned to content!");
-			if (content != null)
+			if (content != null && !isSwapping)
 			{
 				content.Recycle();
 			}
 			content = value;
 			content.transform.localPosition = transform.localPosition;
+            isSwapping = false;
 		}
 	}
 

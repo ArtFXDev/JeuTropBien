@@ -256,9 +256,18 @@ public class Game : MonoBehaviour
     }
 
     void ResetSwapAlies()
-    {
-        swapTile1 = null;
-        swapTile2 = null;
+    { 
+        if(swapTile1 != null)
+        {
+            swapTile1.isSwapping = false;
+            swapTile1 = null;
+        }
+
+        if(swapTile2 != null)
+        {
+            swapTile2.isSwapping = false;
+            swapTile2 = null;
+        }
     }
 
     void SwapAllies(GameTile tile)
@@ -271,6 +280,7 @@ public class Game : MonoBehaviour
                 swapTile1 = tile;
                 Debug.Log("Tower selected");
                 Debug.Log("Swap tile 1 content : " + swapTile1.Content);
+                tile.isSwapping = true;
             }
         }
 
@@ -279,9 +289,15 @@ public class Game : MonoBehaviour
         {
             if (tile.Content.Type == GameTileContentType.Empty)
             {
+                //We get the new stile
+                swapTile2 = tile;
+                tile.isSwapping = true;
+
+                //We swap the content
                 GameTileContent swapTileHold = swapTile1.Content;
                 swapTile1.Content = swapTile2.Content;
                 swapTile2.Content = swapTileHold;
+
                 //Check if the new configuration will not block the ground
                 if (!board.FindPaths())
                 {
@@ -294,6 +310,8 @@ public class Game : MonoBehaviour
                 {
                     Debug.Log("Success to swap ! ");
                 }
+
+                ResetSwapAlies();
             }
 
         }

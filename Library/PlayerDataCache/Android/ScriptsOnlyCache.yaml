@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - Shell
     - TargetPoint
     - WarFactory
+    - cameraMovement
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.TextMeshPro.dll:
@@ -118,11 +119,13 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12800}
     - Class: 114
-      Script: {instanceID: 12944}
+      Script: {instanceID: 12942}
     - Class: 114
-      Script: {instanceID: 12976}
+      Script: {instanceID: 12974}
     - Class: 114
-      Script: {instanceID: 13010}
+      Script: {instanceID: 13008}
+    - Class: 114
+      Script: {instanceID: 18358}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -260,7 +263,7 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
-      Hash: 20c30fb9b1deae319849798b3e9d45e3
+      Hash: 2ca4ad3589aed2522a47dd50d913cf87
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameTileContentFactory
@@ -440,7 +443,7 @@ ScriptsOnlyBuild:
     className: TargetPoint
   - hash:
       serializedVersion: 2
-      Hash: 9f28599208cff3f9b24dbf1308d56e11
+      Hash: ba39db842550cac2106af185b2d19182
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameTile
@@ -654,7 +657,13 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: b6049d71f7d1d38fde1c4b68275ed00e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: cameraMovement
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: D:/Program Files (x86)/Unity/TowerDefense-Proto/TestUi.apk
+  playerPath: D:/Program Files (x86)/Unity/JeuTropBien/screentest.apk
