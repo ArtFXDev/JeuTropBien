@@ -297,16 +297,20 @@ public class GameBoard : MonoBehaviour
 		set
 		{
 			showGrid = value;
-			Material m = ground.GetComponent<MeshRenderer>().material;
 			if (showGrid)
 			{
-				m.mainTexture = gridTexture;
-				m.SetTextureScale("_MainTex", size);
+                foreach(GameTile tile in tiles)
+                {
+                    tile.ShowGrid(true);
+                }
 			}
 			else
 			{
-				m.mainTexture = null;
-			}
+                foreach (GameTile tile in tiles)
+                {
+                    tile.ShowGrid(false);
+                }
+            }
 		}
 	}
 

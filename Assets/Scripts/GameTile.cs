@@ -35,12 +35,16 @@ public class GameTile : MonoBehaviour
     //Boolean saying if tile is in a swap transition or not
     public bool isSwapping = false;
 
+    //Reference to the quad for showing grid
+    [SerializeField]
+    private GameObject quad;
 
-	//---------------------------------------------------------
-	//Functions
 
-	//If a tile is the eastern neighbor of a second tile, then the second tile is the western neighbor of the first tile.
-	public static void MakeEastWestNeighbors(GameTile east, GameTile west)
+    //---------------------------------------------------------
+    //Functions
+
+    //If a tile is the eastern neighbor of a second tile, then the second tile is the western neighbor of the first tile.
+    public static void MakeEastWestNeighbors(GameTile east, GameTile west)
 	{
 		Debug.Assert(
 			west.east == null && east.west == null, "Redefined neighbors!"
@@ -96,7 +100,7 @@ public class GameTile : MonoBehaviour
         //If our content is sand and the previous one is sand or spawner, the local exit point will be reduce by o.5f on the y axis
         if (content.Type == GameTileContentType.Sand && (neighbor.content.Type == GameTileContentType.Sand || neighbor.content.Type == GameTileContentType.SpawnPoint))
         {
-            neighbor.ExitPoint = new Vector3(neighbor.ExitPoint.x, neighbor.ExitPoint.y - 0.5f, neighbor.ExitPoint.z);
+            neighbor.ExitPoint = new Vector3(neighbor.ExitPoint.x, neighbor.ExitPoint.y - 2f, neighbor.ExitPoint.z);
         }
 
 		neighbor.PathDirection = direction;
@@ -150,4 +154,17 @@ public class GameTile : MonoBehaviour
 	{
 		arrow.gameObject.SetActive(false);
 	}
+
+    //Show the grid
+    public void ShowGrid(bool show)
+    {
+        if (show)
+        {
+            quad.SetActive(true);
+        }
+        else
+        {
+            quad.SetActive(false);
+        }
+    }
 }
