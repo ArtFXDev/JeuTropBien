@@ -2,27 +2,31 @@
 
 public class GameTile : MonoBehaviour
 {
-	//Values
-	[SerializeField]
-	Transform arrow = default;
+    //Values
+    [SerializeField]
+    Transform arrow = default;
 
-	//Different direction
-	GameTile north, east, south, west, nextOnPath;
+    //Different direction
 
-	//Amount of tiles that still have to be entered before reaching the destination
-	int distance;
+    GameTile north, south, east, west, nextOnPath;
 
-	//Rotation of the tiles
-	static Quaternion
-		northRotation = Quaternion.Euler(90f, 0f, 0f),
-		eastRotation = Quaternion.Euler(90f, 90f, 0f),
-		southRotation = Quaternion.Euler(90f, 180f, 0f),
-		westRotation = Quaternion.Euler(90f, 270f, 0f);
+    //Amount of tiles that still have to be entered before reaching the destination
+    int distance;
 
-	public bool IsAlternative { get; set; }
+    //Rotation of the tiles
+    static Quaternion
+        northRotation = Quaternion.Euler(90f, 0f, 0f),
+        eastRotation = Quaternion.Euler(90f, 90f, 0f),
+        southRotation = Quaternion.Euler(90f, 180f, 0f),
+        westRotation = Quaternion.Euler(90f, 270f, 0f);
 
-	//We will use this to change the content of the tile
-	GameTileContent content;
+    public bool IsAlternative { get; set; }
+
+    //We will use this to change the content of the tile
+    GameTileContent content = default;
+
+    [SerializeField]
+    public GameTileContentType contentTypeBegin = default;
 
 	//Next line on the path
 	public GameTile NextTileOnPath => nextOnPath;

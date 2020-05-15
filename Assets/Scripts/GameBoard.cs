@@ -13,8 +13,9 @@ public class GameBoard : MonoBehaviour
 	//Size of field
 	Vector2Int size;
 
-	//Array of tiles
-	GameTile[] tiles;
+    //Array of tiles
+    [SerializeField]
+    GameTile[] tiles = default;
 
 	//End tiles
 	Queue<GameTile> searchFrontier = new Queue<GameTile>();
@@ -35,17 +36,23 @@ public class GameBoard : MonoBehaviour
 	//List of everythings thats need to be updated
 	List<GameTileContent> updatingContent = new List<GameTileContent>();
 
-	//---------------------------------------------------------
-	//Functions
-	public void Initialize(Vector2Int size, GameTileContentFactory contentFactory)
+    //List of original spawnPoints and content
+    List<GameTile> originalTile = new List<GameTile>();
+
+
+    //---------------------------------------------------------
+    //Functions
+    public void Initialize(Vector2Int size, GameTileContentFactory contentFactory)
 	{
 		//Board
 		this.size = size;
 		this.contentFactory = contentFactory;
 		ground.localScale = new Vector3(size.x, size.y, 1f);
 
-		//Tiles
-		Vector2 offset = new Vector2((size.x - 1) * 0.5f, (size.y - 1) * 0.5f);
+        //Tiles
+
+        /*
+        Vector2 offset = new Vector2((size.x - 1) * 0.5f, (size.y - 1) * 0.5f);
 		tiles = new GameTile[size.x * size.y];
 		for (int i = 0, y = 0; y < size.y; y++){
 			for (int x = 0; x < size.x; x++, i++){
@@ -68,10 +75,32 @@ public class GameBoard : MonoBehaviour
 				}
 			}
 		}
+        */
 
+        //The tiles are set but not their neighbour yet
+        SetTilesNeighbours();
 
-        Clear();
-        
+        //We set the content to empty
+        foreach (GameTile tile in tiles)
+        {
+            tile.Content = contentFactory.Get(GameTileContentType.Empty);
+        }
+
+        //We will get the original tiles info
+        int i = 0;
+        foreach(GameTile tile in tiles)
+        {
+            ContentTypeBeginToggleFunction(tile);
+            if (i%2 == 0)
+            {
+                tile.IsAlternative = true;
+            }
+            i++;
+            
+            //We add it to our collection
+            originalTile.Add(tile);
+        }
+        Clear();  
 	}
 
 	//Set tile[0] as destination for the moment
@@ -181,7 +210,7 @@ public class GameBoard : MonoBehaviour
 	{
 		if (tile.Content.Type == GameTileContentType.Wall)
 		{
-			tile.Content = contentFactory.Get(GameTileContentType.Empty);
+            tile.Content = contentFactory.Get(GameTileContentType.Empty);
 			FindPaths();
 		}
 		else if (tile.Content.Type == GameTileContentType.Empty)
@@ -340,9 +369,63 @@ public class GameBoard : MonoBehaviour
         }
         spawnPoints.Clear();
         updatingContent.Clear();
-        //Set the center as destination
-        ToggleDestination(tiles[tiles.Length / 2]);
-        //Set the first tile as spawn ennemies point
-        ToggleSpawnPoint(tiles[0]);
+
+        //We will set the original tile content back
+        for (int i = 0; i < originalTile.Count; i++)
+        {
+            ContentTypeBeginToggleFunction((originalTile[i]));
+        }
+    }
+
+    //This function take a tile and call the right toggle function for creating it's content
+    private void ContentTypeBeginToggleFunction(GameTile tile)
+    {
+        if (tile.contentTypeBegin == GameTileContentType.SpawnPoint)
+        {
+            ToggleSpawnPoint(tile);
+        }
+        else if (tile.contentTypeBegin == GameTileContentType.Destination)
+        {
+            ToggleDestination(tile);
+        }
+        else if (tile.contentTypeBegin == GameTileContentType.Sand)
+        {
+            ToggleSand(tile);
+        }
+        else if (tile.contentTypeBegin == GameTileContentType.Wall)
+        {
+            ToggleWall(tile);
+        }
+    }
+
+    //Set the neighbour for each tile
+    private void SetTilesNeighbours()
+    {
+        //Values
+        int currentTile = 0;
+        int leftTile = 0;
+        int southTile = 0;
+
+        for(int x = 0; x < size.x; x++)
+        {
+            for(int y = 0; y < size.y; y++)
+            {
+                currentTile = x + (y * size.x);
+
+                //We set the neighbours in the x axis
+                if (x > 0)
+                {
+                    leftTile = currentTile - 1;
+                    GameTile.MakeEastWestNeighbors(tiles[currentTile], tiles[leftTile]);
+                } 
+
+                //We set the neighbours in the y axis
+                if (y > 0)
+                {
+                    southTile = currentTile - size.x;
+                    GameTile.MakeNorthSouthNeighbors(tiles[currentTile], tiles[southTile]);
+                }
+            }
+        }
     }
 }

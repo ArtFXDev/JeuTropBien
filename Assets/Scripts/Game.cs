@@ -4,10 +4,13 @@ using UnityEngine.UI;
 public class Game : MonoBehaviour
 {
 	//Values
-	[SerializeField]
-	Vector2Int boardSize = new Vector2Int(11, 11);
+	//[SerializeField]
+	Vector2Int boardSize;
 
-	[SerializeField]
+    [SerializeField]
+    GameObject gameBoardGround = default;
+
+    [SerializeField]
 	GameBoard board = default;
 
 	[SerializeField]
@@ -59,6 +62,7 @@ public class Game : MonoBehaviour
     void Awake()
 	{
         playerHealth = startingPlayerHealth;
+        boardSize = new Vector2Int((int)gameBoardGround.transform.localScale.x, (int)gameBoardGround.transform.localScale.y);
         board.Initialize(boardSize, tileContentFactory);
 		board.ShowGrid = true;
         activeScenario = scenario.Begin();
