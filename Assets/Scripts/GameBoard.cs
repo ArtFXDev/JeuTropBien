@@ -176,9 +176,9 @@ public class GameBoard : MonoBehaviour
 		if (Physics.Raycast(ray, out RaycastHit hit, float.MaxValue, 1)) {
 			int x = (int)(hit.point.x + size.x * 0.5f);
 			int y = (int)(hit.point.z + size.y * 0.5f);
-			if (x >= 0 && x < size.x && y >= 0 && y < size.y)
-			{
-				return tiles[x + y * size.x];
+            if (x >= 0 && x < size.x && y >= 0 && y < size.y)
+            {
+                return tiles[x + y * size.x];
 			}
 		}
 		return null;
@@ -218,6 +218,7 @@ public class GameBoard : MonoBehaviour
 			tile.Content = contentFactory.Get(GameTileContentType.Wall);
 			if (!FindPaths())
 			{
+                Debug.Log("can't find path");
 				tile.Content = contentFactory.Get(GameTileContentType.Empty);
 				FindPaths();
 			}
@@ -267,7 +268,7 @@ public class GameBoard : MonoBehaviour
 				updatingContent.Add(tile.Content);
 			}
 			else
-			{
+            { 
 				tile.Content = contentFactory.Get(GameTileContentType.Empty);
 				FindPaths();
 			}
@@ -363,6 +364,7 @@ public class GameBoard : MonoBehaviour
     //Empties all tiles, clears the spawn points and updating content, and sets the default destination and spawn point
     public void Clear()
     {
+        //Clear the tiles
         foreach (GameTile tile in tiles)
         {
             tile.Content = contentFactory.Get(GameTileContentType.Empty);
@@ -370,35 +372,56 @@ public class GameBoard : MonoBehaviour
         spawnPoints.Clear();
         updatingContent.Clear();
 
-        //We will set the original tile content back
-        for (int i = 0; i < originalTile.Count; i++)
+        //Set the original tile content back
+        //First set all the tile that doesn't change the path (ther's no path yet)
+        List<GameTile> otherTilesToSet = new List<GameTile>();
+        foreach (GameTile tile in tiles)
         {
-            ContentTypeBeginToggleFunction((originalTile[i]));
+            if((tile.contentTypeBegin != GameTileContentType.Wall) && (tile.contentTypeBegin != GameTileContentType.Tower1) && (tile.contentTypeBegin != GameTileContentType.Tower2))
+            {
+                ContentTypeBeginToggleFunction(tile);
+            }
+            else
+            {
+                otherTilesToSet.Add(tile);
+            }
+        }
+
+        //Then we set all the other tile that change the path
+        foreach(GameTile tile in otherTilesToSet)
+        {
+            ContentTypeBeginToggleFunction(tile);
         }
     }
 
     //This function take a tile and call the right toggle function for creating it's content
     private void ContentTypeBeginToggleFunction(GameTile tile)
     {
-        if (tile.contentTypeBegin == GameTileContentType.SpawnPoint)
+        switch (tile.contentTypeBegin)
         {
-            ToggleSpawnPoint(tile);
-        }
-        else if (tile.contentTypeBegin == GameTileContentType.Destination)
-        {
-            ToggleDestination(tile);
-        }
-        else if (tile.contentTypeBegin == GameTileContentType.Sand)
-        {
-            ToggleSand(tile);
-        }
-        else if (tile.contentTypeBegin == GameTileContentType.Wall)
-        {
-            ToggleWall(tile);
+            case GameTileContentType.SpawnPoint:
+                ToggleSpawnPoint(tile);
+                break;
+            case GameTileContentType.Destination:
+                ToggleDestination(tile);
+                break;
+            case GameTileContentType.Sand:
+                ToggleSand(tile);
+                break;
+            case GameTileContentType.Wall:
+                ToggleWall(tile);
+                break;
+            case GameTileContentType.Tower1:
+                Debug.Log("tower");
+                ToggleTower(tile,TowerType.Laser);
+                break;
+            case GameTileContentType.Tower2:
+                ToggleTower(tile,TowerType.Mortar);
+                break;
         }
     }
 
-    //Set the neighbour for each tile
+    //Set the neighbour for  each tile
     private void SetTilesNeighbours()
     {
         //Values

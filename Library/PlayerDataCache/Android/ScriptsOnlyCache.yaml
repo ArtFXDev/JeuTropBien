@@ -431,7 +431,7 @@ ScriptsOnlyBuild:
     className: RawImage
   - hash:
       serializedVersion: 2
-      Hash: 53330bf7bd08d9f19cfa124d62fd97e9
+      Hash: ba0e8ae700d985407909df6725e11197
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameBoard
@@ -443,7 +443,7 @@ ScriptsOnlyBuild:
     className: TargetPoint
   - hash:
       serializedVersion: 2
-      Hash: b381ad8184afa4c2f636ad99d6157819
+      Hash: 87030fe2bf052b50c28095bebbd6e498
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameTile
@@ -605,7 +605,7 @@ ScriptsOnlyBuild:
     className: TMP_SubMesh
   - hash:
       serializedVersion: 2
-      Hash: cb0450521a02f327b0e6d8904755ce3c
+      Hash: f07830d99ae1fad3511a8fd566078b48
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Game
@@ -666,4 +666,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: D:/Program Files (x86)/Unity/JeuTropBien/GroundTest.apk
+  playerPath: D:/Program Files (x86)/Unity/JeuTropBien/build1905.apk
