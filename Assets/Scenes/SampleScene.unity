@@ -1326,8 +1326,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 11
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1376,6 +1376,9 @@ MonoBehaviour:
   boundariesYMax: 20
   boundariesZMin: 3
   boundariesZMax: -13
+  boundariesOrthoMin: 4
+  boundariesOrthoMax: 30
+  boundariesOrthoDefault: 11
 --- !u!1 &1015081328
 GameObject:
   m_ObjectHideFlags: 0

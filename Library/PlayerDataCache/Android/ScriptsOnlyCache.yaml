@@ -551,7 +551,7 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: b6049d71f7d1d38fde1c4b68275ed00e
+      Hash: 8fd9c8b8474fd1ce9497ebb8182e454a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: cameraMovement
@@ -666,4 +666,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: D:/Program Files (x86)/Unity/JeuTropBien/build1905.apk
+  playerPath: D:/Program Files (x86)/Unity/JeuTropBien/zoomtest.apk

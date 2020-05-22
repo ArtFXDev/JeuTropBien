@@ -25,16 +25,44 @@ public class cameraMovement : MonoBehaviour
     [SerializeField]
     float boundariesZMax;
 
+    [SerializeField]
+    float boundariesOrthoMin;
+
+    [SerializeField]
+    float boundariesOrthoMax;
+
+    [SerializeField]
+    float boundariesOrthoDefault;
+
 
     void Update()
     {
-        UpdateCameraPosition();
+        UpdateCamera();
     }
 
-    void UpdateCameraPosition()
+    void UpdateCamera()
     {
-        //Check if we're touching the screen and moving the finger
-        if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        //Zoom
+        if (Input.touchCount == 2)
+        {
+            //Let's calcule the length between fingers
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+
+            float difference = currentMagnitude - prevMagnitude;
+
+            //Zoom
+            Zoom(difference * 0.01f);
+        }
+
+        //Position
+        else if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
             //Get touched position
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
@@ -49,5 +77,11 @@ public class cameraMovement : MonoBehaviour
                 Mathf.Clamp(transform.position.z, boundariesZMax, boundariesZMin)
                 );
         }
+    }
+
+    //Zoom function
+    void Zoom(float increment)
+    {
+        Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - increment, boundariesOrthoMin, boundariesOrthoMax);
     }
 }
