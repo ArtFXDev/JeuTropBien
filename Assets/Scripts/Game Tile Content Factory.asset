@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   destinationPrefab: {fileID: 1091304600851704903, guid: 698adfed9f5fb3642985a606389e65d0,
     type: 3}
+  destinationLaserPrefab: {fileID: 100145853660150586, guid: 885c61985e411414480d5eef1f52a807,
+    type: 3}
   emptyPrefab: {fileID: 5462246556980629755, guid: f8f71b0db05596a40802f70a22ed7fcb,
     type: 3}
   wallPrefab: {fileID: 7312206754513512714, guid: 795ae6bba01375840ba4ce075a9a1451,

@@ -148,7 +148,8 @@ public class GameTile : MonoBehaviour
 				content.Recycle();
 			}
 			content = value;
-			content.transform.localPosition = transform.localPosition;
+			content.transform.position = transform.position;
+			//content.transform.localPosition = transform.localPosition;
             isSwapping = false;
 		}
 	}

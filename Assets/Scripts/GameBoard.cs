@@ -63,21 +63,6 @@ public class GameBoard : MonoBehaviour
             }
 
             //We will get the original tiles info
-            /*int i = 0;
-            foreach (GameTile tile in tiles)
-            {
-                ContentTypeBeginToggleFunction(tile);
-                if (i % 2 == 0)
-                {
-                    tile.IsAlternative = true;
-                }
-                i++;
-
-                //We add it to our collection
-                originalTile.Add(tile);
-            }
-            */
-
             for (int i = 0, y = 0; y < size.y; y++)
             {
                 for (int x = 0; x < size.x; x++, i++)
@@ -92,10 +77,6 @@ public class GameBoard : MonoBehaviour
                     //originalTile.Add(tile);
                 }
             }
-
-                    
-
-
         }
         //If we don't have tiles, we will create them
         else
@@ -130,12 +111,7 @@ public class GameBoard : MonoBehaviour
                     tile.Content = contentFactory.Get(GameTileContentType.Empty);
                 }
             }
-            //Set tile 0 spawn and the last objective
-            ToggleDestination(tiles[tiles.Length / 2]);
-            ToggleSpawnPoint(tiles[0]);
-
         }
-
         Clear();
     }
 
@@ -145,7 +121,7 @@ public class GameBoard : MonoBehaviour
 		//first step is to clear the path of all tiles, then make one tile the destination and add it to the frontier
 		foreach (GameTile tile in tiles)
 		{
-			if (tile.Content.Type == GameTileContentType.Destination)
+			if (tile.Content.Type == GameTileContentType.Destination || tile.Content.Type == GameTileContentType.DestinationLaser)
 			{
 				tile.BecomeDestination();
 				searchFrontier.Enqueue(tile);
@@ -239,10 +215,44 @@ public class GameBoard : MonoBehaviour
 			tile.Content = contentFactory.Get(GameTileContentType.Destination);
 			FindPaths();
 		}
-	}
+        else if (tile.Content.Type == GameTileContentType.DestinationLaser)
+        {
+            updatingContent.Remove(tile.Content);
+            tile.Content = contentFactory.Get(GameTileContentType.Destination);
+        }
+    }
 
-	//Method for a wall
-	public void ToggleWall(GameTile tile)
+    //Method for create a destination laser
+    public void ToggleDestinationLaser(GameTile tile)
+    {
+        if (tile.Content.Type == GameTileContentType.DestinationLaser)
+        {
+            updatingContent.Remove(tile.Content);
+            tile.Content = contentFactory.Get(GameTileContentType.Empty);
+            //Check if ther's at least one path
+            if (!FindPaths())
+            {
+                tile.Content =
+                    contentFactory.Get(GameTileContentType.DestinationLaser);
+                updatingContent.Add(tile.Content);
+                FindPaths();
+            }
+        }
+        else if (tile.Content.Type == GameTileContentType.Empty)
+        {
+            tile.Content = contentFactory.Get(GameTileContentType.DestinationLaser);
+            updatingContent.Add(tile.Content);
+            FindPaths();
+        }
+        else if (tile.Content.Type == GameTileContentType.Destination)
+        {
+            tile.Content = contentFactory.Get(GameTileContentType.DestinationLaser);
+            updatingContent.Add(tile.Content);
+        }
+    }
+
+    //Method for a wall
+    public void ToggleWall(GameTile tile)
 	{
 		if (tile.Content.Type == GameTileContentType.Wall)
 		{

@@ -136,6 +136,10 @@ public class Game : MonoBehaviour
                     board.ToggleDestination(tile);
                     break;
 
+                case ButtonPushType.DestinationLaser:
+                    board.ToggleDestinationLaser(tile);
+                    break;
+
                 case ButtonPushType.SpawnPoint:
                     board.ToggleSpawnPoint(tile);
                     break;

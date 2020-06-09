@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b81312a91cca74888b6e738615dce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 4
+  type: 5
   targetingRange: 3.5
   shotsPerSecond: 1
   shellBlastRadius: 1.5

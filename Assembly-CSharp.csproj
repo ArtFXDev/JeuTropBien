@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Camera\cameraMovement.cs" />
+    <Compile Include="Assets\Scripts\Destination\DestinationLaser.cs" />
+    <Compile Include="Assets\Scripts\Destination\DestinationType.cs" />
     <Compile Include="Assets\Scripts\Direction.cs" />
     <Compile Include="Assets\Scripts\Enemy\Enemy.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyFactory.cs" />
