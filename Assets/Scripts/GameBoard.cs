@@ -43,68 +43,104 @@ public class GameBoard : MonoBehaviour
     //---------------------------------------------------------
     //Functions
     public void Initialize(Vector2Int size, GameTileContentFactory contentFactory)
-	{
-		//Board
-		this.size = size;
-		this.contentFactory = contentFactory;
-		ground.localScale = new Vector3(size.x, size.y, 1f);
+    {
+        //Board
+        this.size = size;
+        this.contentFactory = contentFactory;
+        ground.localScale = new Vector3(size.x, size.y, 1f);
 
         //Tiles
-
-        /*
-        Vector2 offset = new Vector2((size.x - 1) * 0.5f, (size.y - 1) * 0.5f);
-		tiles = new GameTile[size.x * size.y];
-		for (int i = 0, y = 0; y < size.y; y++){
-			for (int x = 0; x < size.x; x++, i++){
-				GameTile tile = tiles[i] = Instantiate(tilePrefab);
-				tile.transform.SetParent(transform, false);
-				tile.transform.localPosition = new Vector3(	x - offset.x, 0f, y - offset.y);
-
-				if (x > 0){
-					GameTile.MakeEastWestNeighbors(tile, tiles[i - 1]);
-				}
-				if (y > 0){
-					GameTile.MakeNorthSouthNeighbors(tile, tiles[i - size.x]);
-				}
-
-				//Set the alternative part of the tile (for having diagonal arrows)
-				tile.IsAlternative = (x & 1) == 0;
-				if ((y & 1) == 0)
-				{
-					tile.IsAlternative = !tile.IsAlternative;
-				}
-			}
-		}
-        */
-
-        //The tiles are set but not their neighbour yet
-        SetTilesNeighbours();
-
-        //We set the content to empty
-        foreach (GameTile tile in tiles)
+        //Check if we have tiles
+        if (tiles.Length != 0)
         {
-            tile.Content = contentFactory.Get(GameTileContentType.Empty);
-        }
+            //The tiles are set but not their neighbour yet
+            SetTilesNeighbours();
 
-        //We will get the original tiles info
-        int i = 0;
-        foreach(GameTile tile in tiles)
-        {
-            ContentTypeBeginToggleFunction(tile);
-            if (i%2 == 0)
+            //We set the content to empty
+            foreach (GameTile tile in tiles)
             {
-                tile.IsAlternative = true;
+                tile.Content = contentFactory.Get(GameTileContentType.Empty);
             }
-            i++;
-            
-            //We add it to our collection
-            originalTile.Add(tile);
-        }
-        Clear();  
-	}
 
-	//Set tile[0] as destination for the moment
-	public bool FindPaths()
+            //We will get the original tiles info
+            /*int i = 0;
+            foreach (GameTile tile in tiles)
+            {
+                ContentTypeBeginToggleFunction(tile);
+                if (i % 2 == 0)
+                {
+                    tile.IsAlternative = true;
+                }
+                i++;
+
+                //We add it to our collection
+                originalTile.Add(tile);
+            }
+            */
+
+            for (int i = 0, y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++, i++)
+                {
+                    ContentTypeBeginToggleFunction(tiles[i]);
+                    tiles[i].IsAlternative = (x & 1) == 0;
+                    if ((y & 1) == 0)
+                    {
+                        tiles[i].IsAlternative = !tiles[i].IsAlternative;
+                    }
+                    //We add it to our collection
+                    //originalTile.Add(tile);
+                }
+            }
+
+                    
+
+
+        }
+        //If we don't have tiles, we will create them
+        else
+        {
+            Vector2 offset = new Vector2((size.x - 1) * 0.5f, (size.y - 1) * 0.5f);
+            tiles = new GameTile[size.x * size.y];
+            for (int i = 0, y = 0; y < size.y; y++)
+            {
+                for (int x = 0; x < size.x; x++, i++)
+                {
+                    GameTile tile = tiles[i] = Instantiate(tilePrefab);
+                    tile.transform.SetParent(transform, false);
+                    tile.transform.localPosition = new Vector3(x - offset.x, 0f, y - offset.y);
+
+                    if (x > 0)
+                    {
+                        GameTile.MakeEastWestNeighbors(tile, tiles[i - 1]);
+                    }
+                    if (y > 0)
+                    {
+                        GameTile.MakeNorthSouthNeighbors(tile, tiles[i - size.x]);
+                    }
+
+                    //Set the alternative part of the tile (for having diagonal arrows)
+                    tile.IsAlternative = (x & 1) == 0;
+                    if ((y & 1) == 0)
+                    {
+                        tile.IsAlternative = !tile.IsAlternative;
+                    }
+
+                    //Set tile as empty
+                    tile.Content = contentFactory.Get(GameTileContentType.Empty);
+                }
+            }
+            //Set tile 0 spawn and the last objective
+            ToggleDestination(tiles[tiles.Length / 2]);
+            ToggleSpawnPoint(tiles[0]);
+
+        }
+
+        Clear();
+    }
+
+    //Set tile[0] as destination for the moment
+    public bool FindPaths()
 	{
 		//first step is to clear the path of all tiles, then make one tile the destination and add it to the frontier
 		foreach (GameTile tile in tiles)
@@ -412,7 +448,6 @@ public class GameBoard : MonoBehaviour
                 ToggleWall(tile);
                 break;
             case GameTileContentType.Tower1:
-                Debug.Log("tower");
                 ToggleTower(tile,TowerType.Laser);
                 break;
             case GameTileContentType.Tower2:
