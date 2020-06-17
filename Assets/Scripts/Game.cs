@@ -25,7 +25,9 @@ public class Game : MonoBehaviour
     GameBehaviorCollection enemies = new GameBehaviorCollection();
     GameBehaviorCollection nonEnemies = new GameBehaviorCollection();
 
+    //Type of prefab selected
     TowerType selectedTowerType;
+    DestinationType selectedDestinationType;
 
 
     //configuration field for a scenario and keep track of the its state
@@ -132,12 +134,12 @@ public class Game : MonoBehaviour
                     board.ToggleTower(tile, selectedTowerType);
                     break;
 
-                case ButtonPushType.Destination:
-                    board.ToggleDestination(tile);
+                case ButtonPushType.DestinationNormal:
+                    board.ToggleDestination(tile, selectedDestinationType);
                     break;
 
                 case ButtonPushType.DestinationLaser:
-                    board.ToggleDestinationLaser(tile);
+                    board.ToggleDestination(tile, selectedDestinationType);
                     break;
 
                 case ButtonPushType.SpawnPoint:
@@ -232,6 +234,19 @@ public class Game : MonoBehaviour
 
                     case ButtonPushType.MortarTower:
                         selectedTowerType = TowerType.Mortar;
+                        buttonTypeTile = buttonType;
+                        ResetSwapAlies();
+                        break;
+
+                    //Change the Destination type
+                    case ButtonPushType.DestinationNormal:
+                        selectedDestinationType = DestinationType.Normal;
+                        buttonTypeTile = buttonType;
+                        ResetSwapAlies();
+                        break;
+
+                    case ButtonPushType.DestinationLaser:
+                        selectedDestinationType = DestinationType.Laser;
                         buttonTypeTile = buttonType;
                         ResetSwapAlies();
                         break;

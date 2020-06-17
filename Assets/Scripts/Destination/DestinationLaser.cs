@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 
-public class DestinationLaser : GameTileContent
+public class DestinationLaser : Destination
 {
-    public DestinationType DestinationType { get; set; }
+    //Return destination type
+    public override DestinationType DestinationType => DestinationType.Laser;
+
+    public override bool isUpdatingContent => true;
+
 
     //Shooting range
     [SerializeField, Range(1.5f, 10.5f)]
@@ -63,12 +67,10 @@ public class DestinationLaser : GameTileContent
     void Awake()
     {
         laserBeamScale = laserBeam.localScale;
-        DestinationType = DestinationType.Laser;
     }
 
     public override void GameUpdate()
     {
-        Debug.Log("GameUpdate DestinationLaser");
         if (TrackTarget(ref target) || AcquireTarget(out target))
         {
             Shoot();

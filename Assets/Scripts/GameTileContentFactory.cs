@@ -6,10 +6,7 @@ public class GameTileContentFactory : GameObjectFactory
 {
 	//Values
 	[SerializeField]
-	GameTileContent destinationPrefab = default;
-
-    [SerializeField]
-    GameTileContent destinationLaserPrefab = default;
+	Destination[] destinationPrefabs = default;
 
     [SerializeField]
 	GameTileContent emptyPrefab = default;
@@ -48,8 +45,6 @@ public class GameTileContentFactory : GameObjectFactory
 	{
 		switch (type)
 		{
-			case GameTileContentType.Destination: return Get(destinationPrefab);
-			case GameTileContentType.DestinationLaser: return Get(destinationLaserPrefab);
 			case GameTileContentType.Empty: return Get(emptyPrefab);
 			case GameTileContentType.Wall: return Get(wallPrefab);
 			case GameTileContentType.SpawnPoint: return Get(spawnPointPrefab);
@@ -75,4 +70,13 @@ public class GameTileContentFactory : GameObjectFactory
         instance.OriginFactory = this;
         return instance;
     }
+
+	//Get instance of corresponding Destination prefab
+	public Destination Get(DestinationType type)
+	{
+		Debug.Assert((int)type < destinationPrefabs.Length, "Unsupported destination type!");
+		Destination prefab = destinationPrefabs[(int)type];
+		Debug.Assert(type == prefab.DestinationType, "Destination prefab at wrong index!");
+		return Get(prefab);
+	}
 }
