@@ -121,8 +121,7 @@ public class GameBoard : MonoBehaviour
 		//first step is to clear the path of all tiles, then make one tile the destination and add it to the frontier
 		foreach (GameTile tile in tiles)
 		{
-			//if (tile.Content.Type == GameTileContentType.DestinationNormal || tile.Content.Type == GameTileContentType.DestinationLaser)
-            if (tile.Content.Type == GameTileContentType.Destination)
+            if (tile.Content.Type == GameTileContentType.Destination )
 			{
 				tile.BecomeDestination();
 				searchFrontier.Enqueue(tile);
@@ -254,6 +253,7 @@ public class GameBoard : MonoBehaviour
     //Method for a wall
     public void ToggleWall(GameTile tile)
 	{
+        Debug.Log("toggle");
 		if (tile.Content.Type == GameTileContentType.Wall)
 		{
             tile.Content = contentFactory.Get(GameTileContentType.Empty);
@@ -261,7 +261,8 @@ public class GameBoard : MonoBehaviour
 		}
 		else if (tile.Content.Type == GameTileContentType.Empty)
 		{
-			tile.Content = contentFactory.Get(GameTileContentType.Wall);
+            Debug.Log("toggle");
+            tile.Content = contentFactory.Get(GameTileContentType.Wall);
 			if (!FindPaths())
 			{
                 Debug.Log("can't find path");
